@@ -3,7 +3,7 @@ package com.cremedia.cremedia.models;
 
 import java.time.LocalDate;
 
-public class User {
+public class User2 {
 
     Integer id;
     String username;
@@ -26,7 +26,7 @@ public class User {
     Boolean verified;
     LocalDate last_login;
 
-    public User(Integer id, String username, String name, String surname, String email, String number, String password, String avatar, String bio, String tag, LocalDate dob, String gender, String country, Boolean visibility, Integer followers, Integer followees, Boolean active, Boolean pro, Boolean verified, LocalDate last_login){
+    public User2(Integer id, String username, String name, String surname, String email, String number, String password, String avatar, String bio, String tag, LocalDate dob, String gender, String country, Boolean visibility, Integer followers, Integer followees, Boolean active, Boolean pro, Boolean verified, LocalDate last_login){
         this.id = id;
         this.username = username;
         this.name = name;
@@ -50,7 +50,7 @@ public class User {
 
     }
 
-    public User() {
+    public User2() {
 
     }
 

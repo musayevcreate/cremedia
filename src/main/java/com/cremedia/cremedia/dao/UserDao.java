@@ -1,13 +1,11 @@
 package com.cremedia.cremedia.dao;
-import com.cremedia.cremedia.models.User;
+import com.cremedia.cremedia.models.User2;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository("userDao")
 public interface UserDao {
-    void add(User user);
-    void update(User user);
-    User get(Long userId);
+    void add(User2 user2);
+    void update(User2 user2);
+    User2 get(Long userId);
     void delete(Long userId);
 }

@@ -1,6 +1,5 @@
 package com.cremedia.cremedia.controller;
 
-import com.cremedia.cremedia.models.User;
 import com.cremedia.cremedia.models.entity.UserTag;
 import com.cremedia.cremedia.service.UserTagService;
 import lombok.RequiredArgsConstructor;
