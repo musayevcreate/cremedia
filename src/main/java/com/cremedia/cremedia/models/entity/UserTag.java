@@ -9,14 +9,12 @@ import lombok.Data;
 public class UserTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @OneToOne
-    @JoinColumn(referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @Column(length = 50)
     private String tagName;
-
-
 }

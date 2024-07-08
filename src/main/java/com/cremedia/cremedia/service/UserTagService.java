@@ -1,18 +1,20 @@
 package com.cremedia.cremedia.service;
 
-import com.cremedia.cremedia.models.entity.UserTag;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
+import com.cremedia.cremedia.models.dto.request.UserTagRequestDto;
+import com.cremedia.cremedia.models.dto.response.UserTagResponseDto;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 public interface UserTagService {
+    UserTagResponseDto create(UserTagRequestDto dto);
 
-    UserTag getById(Long id) ;
+    UserTagResponseDto update(Long id, UserTagRequestDto dto);
 
-    Page<UserTag> getAll(PageRequest pageable);
+    UserTagResponseDto getById(Long id);
 
-    UserTag add(UserTag userTag);
-    UserTag update(UserTag userTag);
+    List<UserTagResponseDto> getAll();
+
     void delete(Long id);
-    Page<UserTag> getAll(Pageable pageable);
 }

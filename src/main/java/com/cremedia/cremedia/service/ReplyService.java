@@ -12,7 +12,7 @@ public interface ReplyService {
     ReplyResponseDto getById(Long id);
     ReplyResponseDto update(Long id, ReplyRequestDto replyRequestDto);
     void delete(Long id);
-    List<ReplyResponseDto> getByPost(Post postId);
+    List<ReplyResponseDto> getByPost(Long postId);
 
     ReplyResponseDto create(ReplyRequestDto replyRequestDto);
 }

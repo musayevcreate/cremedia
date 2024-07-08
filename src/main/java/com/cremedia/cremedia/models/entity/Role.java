@@ -11,12 +11,17 @@ import lombok.NoArgsConstructor;
 @Table(name="roles")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    public Role() {
+        this.id = 2;
+    }
+
     @Enumerated(EnumType.STRING)
     private RoleEnum name;
 }

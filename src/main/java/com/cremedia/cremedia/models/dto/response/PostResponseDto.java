@@ -1,10 +1,8 @@
 package com.cremedia.cremedia.models.dto.response;
 
-import com.cremedia.cremedia.models.entity.*;
-import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.HashSet;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -14,28 +12,17 @@ public class PostResponseDto {
     private Long id;
     private Long userId;
     private String content;
-    private Long likes;
-    private Long retweets;
-    @ManyToMany
-    @JoinTable(
-            name = "post_hashtags",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "hashtag_id")
-    )
-    private Set<Hashtag> hashtags = new HashSet<>();
-
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
-    private Set<Emotion> emotions = new HashSet<>();
-
-    @OneToMany(mappedBy = "post")
-    private Set<Reply> replies = new HashSet<>();
-
-    private Long comments;
+    private Long likes = 0L;
+    private Long retweets = 0L;
+    private Long comments = 0L;
     private String mentions;
-
     private String status;
     private String media;
-    private Post replyTo;
+    private LocalDateTime createdAt;
     private boolean isArchived;
     private String visibility;
+    private List<Long> hashtagIds;
+    private Set<Long> emotionIds;
+    private List<Long> replyIds;
+    private Long replyToId;
 }

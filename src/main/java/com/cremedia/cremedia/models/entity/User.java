@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,16 +44,11 @@ public class User implements UserDetails {
     private Boolean isEnabled;
 
     private String avatar;
+
     private String bio;
-    private String tag;
-
     private LocalDate dateOfBirth;
-
     private String gender;
     private String country;
-//
-//    private Long followers;
-//    private Long followings;
 
     private Boolean visibility;
 
@@ -64,8 +58,11 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean isVerified;
 
-    @OneToOne(mappedBy = "user")
-    private UserTag tags;
+    @OneToMany(mappedBy = "user")
+    private Set<UserTag> tags;
+
+    @Column(length = 50)
+    private String tagName;
 
     @Column(nullable = false)
     private LocalDateTime lastLogin;
@@ -85,11 +82,6 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return username;
-    }
-
-    @PrePersist
-    protected void onLastLogin() {
-        this.lastLogin = LocalDateTime.now();
     }
 
     @ManyToMany
@@ -124,5 +116,22 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+    @PrePersist
+    protected void onCreate(){
+        this.avatar = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+        this.bio = "Hello, I'm new here!";
+        this.visibility = true;
+        this.isEnabled = true;
+        this.isPro = false;
+        this.isVerified = false;
+        this.lastLogin = LocalDateTime.now();
+    }
+
+
+//    private Long followers;
+//    private Long followings;
+
+
 }
 

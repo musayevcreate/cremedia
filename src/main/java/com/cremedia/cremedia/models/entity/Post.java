@@ -14,8 +14,8 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "posts")
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,13 @@ public class Post {
     @Lob // what is this?
     private String content;
 
-    private Long likes;
-    private Long retweets;
 
-    private Long comments;
+    private Long likes = 0L;
+
+
+    private Long retweets = 0L;
+
+    private Long comments = 0L;
 
     private String mentions;
 

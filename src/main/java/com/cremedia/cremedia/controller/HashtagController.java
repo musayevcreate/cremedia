@@ -2,31 +2,40 @@ package com.cremedia.cremedia.controller;
 
 import com.cremedia.cremedia.models.entity.Hashtag;
 import com.cremedia.cremedia.service.HashtagService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/hashtags")
+@RequestMapping("/api/hashtags")
+@Slf4j
 public class HashtagController {
 
     private final HashtagService hashtagService;
 
+    @Operation(summary = "Create a new Hashtag")
     @PostMapping("/create")
-    public ResponseEntity<Hashtag> create(@RequestParam String text) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Hashtag create(@RequestParam String text) {
         Hashtag hashtag = hashtagService.create(text);
-        return new ResponseEntity<>(hashtag, HttpStatus.CREATED);
+        log.info("Hashtag created: {}", hashtag);
+        return hashtag;
     }
 
+    @Operation(summary = "Get Hashtag by text")
     @GetMapping("/{text}")
-    public ResponseEntity<Hashtag> getByName(@PathVariable String text) {
+    @ResponseStatus(HttpStatus.OK)
+    public Hashtag getByText(@PathVariable String text) {
         Hashtag hashtag = hashtagService.getByText(text);
-        if (hashtag != null) {
-            return new ResponseEntity<>(hashtag, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (hashtag == null) {
+            log.info("Hashtag with text '{}' not found", text);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Hashtag not found");
         }
+        log.info("Hashtag found: {}", hashtag);
+        return hashtag;
     }
 }

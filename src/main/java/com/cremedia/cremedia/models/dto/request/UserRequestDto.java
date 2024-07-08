@@ -1,5 +1,6 @@
 package com.cremedia.cremedia.models.dto.request;
 
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import jakarta.validation.constraints.Email;
@@ -26,6 +27,9 @@ public class UserRequestDto {
     private String number;
 
     @NotBlank
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",
+            message = "Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 digit, with a minimum length of 8 characters")
+
     private String password;
 
     private String avatar;

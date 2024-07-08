@@ -24,5 +24,10 @@ public class HashtagServiceImpl implements HashtagService {
         return (Hashtag) hashtagRepository.findByText(text);
     }
 
+    @Override
+    public Hashtag findById(Long hashtagId) {
+        return null;
+    }
+
 
 }

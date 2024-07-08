@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfig {
+public class WebSecurityConfig  {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
@@ -26,18 +26,12 @@ public class WebSecurityConfig {
                         auth
                                 .requestMatchers(permitSwagger).permitAll()
                                 .requestMatchers("/api/**").permitAll()
+
+
 //                                .requestMatchers("/api/v1/auth/login").permitAll()
+//                                .requestMatchers("/api/v1/auth/register").permitAll()
 //                                .requestMatchers("/api/v1/applications/public/**").permitAll()
 //                                .requestMatchers("/api/v1/applications/admin/**").hasAnyRole("ADMIN")
-//                                .requestMatchers("/api/v1/blogs/public/**").permitAll()
-//                                .requestMatchers("/api/v1/blogs/teacher/**").hasAnyRole(TEACHER)
-//                                .requestMatchers("/api/v1/courses/public").permitAll()
-//                                .requestMatchers("/api/v1/courses/admin").hasAnyRole("ADMIN")
-//                                .requestMatchers("/api/v1/students/admin").hasAnyRole("ADMIN")
-//                                .requestMatchers("/api/v1/students/student").hasAnyRole(STUDENT)
-//                                .requestMatchers("/api/v1/teachers/public").permitAll()
-//                                .requestMatchers("/api/v1/teachers/teacher").hasAnyRole(TEACHER)
-//                                .requestMatchers("/api/v1/teachers/admin").hasAnyRole("ADMIN")
 
                                 .anyRequest().authenticated());
         http.authenticationProvider(authenticationProvider);

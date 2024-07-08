@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/followers")
+@RequestMapping("/api/followers")
 public class FollowerController {
 
     private final FollowerService followerService;
 
     @PostMapping("/follow")
-    public ResponseEntity<String> follow(@RequestParam Long followerId, @RequestParam Long followingId) {
+    public ResponseEntity<String> follow(@RequestBody Long followerId, @RequestBody Long followingId) {
         followerService.follow(followerId, followingId);
         return new ResponseEntity<>("User followed successfully", HttpStatus.CREATED);
     }

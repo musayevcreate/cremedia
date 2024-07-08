@@ -1,5 +1,6 @@
 package com.cremedia.cremedia.service.Impl;
 
+import com.cremedia.cremedia.models.dto.request.LikeRequestDto;
 import com.cremedia.cremedia.models.entity.Like;
 import com.cremedia.cremedia.models.entity.Post;
 import com.cremedia.cremedia.models.entity.User;
@@ -23,19 +24,26 @@ public class LikeServiceImpl implements LikeService {
     private final PostRepository postRepository;
 
     @Override
-    public Like likePost(Long postId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+    public void likePost(LikeRequestDto likeRequestDto) {
+        User user = userRepository.findById(likeRequestDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + likeRequestDto.getUserId()));
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+        Post post = postRepository.findById(likeRequestDto.getPostId())
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + likeRequestDto.getPostId()));
 
         Like like = new Like();
         like.setUser(user);
         like.setPost(post);
         like.setLikeDate(LocalDateTime.now());
-        return like;
+
+        likeRepository.save(like);
+
+        post.setLikes(post.getLikes() + 1);
+        postRepository.save(post);
+
+        log.info("Post liked successfully by user: {}, post: {}", user.getId(), post.getId());
     }
+
 
     @Override
     public void unlikePost(Long postId) {

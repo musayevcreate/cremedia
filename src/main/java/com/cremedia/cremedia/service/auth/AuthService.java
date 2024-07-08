@@ -3,20 +3,15 @@ package com.cremedia.cremedia.service.auth;
 import com.cremedia.cremedia.mapper.UserMapper;
 import com.cremedia.cremedia.models.auth.AuthRequestDTO;
 import com.cremedia.cremedia.models.auth.AuthenticationDTO;
-import com.cremedia.cremedia.models.auth.RoleDTO;
 import com.cremedia.cremedia.models.auth.UserRegisterDTO;
 import com.cremedia.cremedia.models.entity.User;
 import com.cremedia.cremedia.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +20,6 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authManager;
     private final UserMapper userMapper;
 
     public void register(UserRegisterDTO userRegisterDTO) {
@@ -43,16 +37,6 @@ public class AuthService {
         userRepository.save(userMapper.toRegisterEntity(user));
     }
 
-//    public void login(String username, String password, Set<RoleDTO> roles) {
-//        var user = UserRegisterDTO.builder()
-//                .username(username)
-//                .password(passwordEncoder.encode(password))
-//                .roles(roles)
-//                .isEnabled(true)
-//                .build();
-//
-//        userRepository.save(userMapper.toRegisterEntity(user));
-//    }
 
     public AuthenticationDTO authenticate(AuthRequestDTO authRequestDTO) {
         log.info("ActionLog.authenticate.start by: {}", authRequestDTO.getUsername());
@@ -63,13 +47,9 @@ public class AuthService {
                 );
 
         try {
-
-            authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            authRequestDTO.getUsername(),
-                            authRequestDTO.getPassword()
-                    )
-            );
+            if (!passwordEncoder.matches(authRequestDTO.getPassword(), user.getPassword())) {
+                throw new BadCredentialsException("INVALID_USERNAME_OR_PASSWORD");
+            }
 
             var jwtToken = jwtService.generateToken(user);
             log.info("ActionLog.authenticate.end logged in: {}",  user.getUsername());

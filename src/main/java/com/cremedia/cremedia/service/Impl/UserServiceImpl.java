@@ -69,4 +69,9 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
         log.info("User deleted with id: {}", id);
     }
+
+    @Override
+    public User findById(Long userId) {
+        return null;
+    }
 }
