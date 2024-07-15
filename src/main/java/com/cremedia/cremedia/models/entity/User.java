@@ -50,7 +50,13 @@ public class User implements UserDetails {
     private String gender;
     private String country;
 
-    private Boolean visibility;
+//    @ManyToOne
+//    @JoinColumn(name = "status", nullable = false)
+//    private Status status;
+//
+//    public User() {
+//        this.status = new Status();
+//    }
 
     @Column(nullable = false)
     private boolean isPro;
@@ -121,7 +127,6 @@ public class User implements UserDetails {
     protected void onCreate(){
         this.avatar = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
         this.bio = "Hello, I'm new here!";
-        this.visibility = true;
         this.isEnabled = true;
         this.isPro = false;
         this.isVerified = false;

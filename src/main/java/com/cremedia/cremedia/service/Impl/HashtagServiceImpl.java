@@ -6,6 +6,8 @@ import com.cremedia.cremedia.service.HashtagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class HashtagServiceImpl implements HashtagService {
@@ -20,8 +22,8 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     @Override
-    public Hashtag getByText(String text) {
-        return (Hashtag) hashtagRepository.findByText(text);
+    public Optional<Hashtag> getByText(String text) {
+        return hashtagRepository.findByText(text);
     }
 
     @Override

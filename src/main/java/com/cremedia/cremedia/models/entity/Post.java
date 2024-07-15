@@ -35,36 +35,40 @@ public class Post {
 
     private Long retweets = 0L;
 
-    private Long comments = 0L;
-
     private String mentions;
-
-    private String status;
 
     @Lob
     private String media;
 
-    @ManyToMany
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "post_hashtags",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "hashtag_id")
     )
-    private Set<Hashtag> hashtags = new HashSet<>();
+    private Set<Hashtag> hashtags;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private Set<Emotion> emotions = new HashSet<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "reply_to")
     private Post replyTo;
 
+//    @ManyToOne
+//    @JoinColumn(name = "status", nullable = false)
+//    private Status status;
+//
+//    public Post() {
+//        this.status = new Status();
+//    }
+
     private LocalDateTime createdAt;
 
     private boolean isArchived;
 
-    private String visibility;
 }

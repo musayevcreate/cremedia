@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/hashtags")
@@ -30,12 +32,12 @@ public class HashtagController {
     @GetMapping("/{text}")
     @ResponseStatus(HttpStatus.OK)
     public Hashtag getByText(@PathVariable String text) {
-        Hashtag hashtag = hashtagService.getByText(text);
-        if (hashtag == null) {
+        Optional<Hashtag> hashtag = hashtagService.getByText(text);
+        if (hashtag.isEmpty()) {
             log.info("Hashtag with text '{}' not found", text);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Hashtag not found");
         }
         log.info("Hashtag found: {}", hashtag);
-        return hashtag;
+        return hashtag.orElse(null);
     }
 }

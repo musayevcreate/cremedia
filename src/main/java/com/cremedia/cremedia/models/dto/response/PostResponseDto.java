@@ -1,5 +1,6 @@
 package com.cremedia.cremedia.models.dto.response;
 
+import com.cremedia.cremedia.models.entity.Reply;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,15 +15,13 @@ public class PostResponseDto {
     private String content;
     private Long likes = 0L;
     private Long retweets = 0L;
-    private Long comments = 0L;
     private String mentions;
     private String status;
     private String media;
     private LocalDateTime createdAt;
     private boolean isArchived;
-    private String visibility;
-    private List<Long> hashtagIds;
+    private List<String> hashtags;
     private Set<Long> emotionIds;
-    private List<Long> replyIds;
     private Long replyToId;
+    private List<ReplyResponseDto> replies;
 }

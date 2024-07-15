@@ -14,8 +14,4 @@ public class PostRequestDto {
 
     @NotBlank
     private String content;
-
-    private Set<Long> hashtagIds;
-
-    private String visibility;
 }

@@ -2,8 +2,12 @@ package com.cremedia.cremedia.service.Impl;
 import com.cremedia.cremedia.mapper.ReplyMapper;
 import com.cremedia.cremedia.models.dto.request.ReplyRequestDto;
 import com.cremedia.cremedia.models.dto.response.ReplyResponseDto;
+import com.cremedia.cremedia.models.entity.Post;
 import com.cremedia.cremedia.models.entity.Reply;
+import com.cremedia.cremedia.models.entity.User;
+import com.cremedia.cremedia.repository.PostRepository;
 import com.cremedia.cremedia.repository.ReplyRepository;
+import com.cremedia.cremedia.repository.UserRepository;
 import com.cremedia.cremedia.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,29 +24,47 @@ import java.util.stream.Collectors;
 public class ReplyServiceImpl implements ReplyService {
 
     private final ReplyRepository replyRepository;
+    private final UserRepository userRepository;
+    private final PostRepository postRepository;
     private final ReplyMapper replyMapper;
 
     @Override
-    @Transactional
-    public ReplyResponseDto create(ReplyRequestDto replyRequestDto) {
-        log.info("Creating reply: {}", replyRequestDto);
-        Long postId = replyRequestDto.getPostId();
-        if (postId == null) {
-            log.error("Post ID is null in reply request: {}", replyRequestDto);
-            throw new IllegalArgumentException("Post ID cannot be null");
+    public ReplyResponseDto create(ReplyRequestDto requestDto) {
+        Reply reply = replyMapper.toEntity(requestDto);
+
+        if (requestDto.getUserId() != null) {
+            User user = userRepository.findById(requestDto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            reply.setUser(user);
+        } else {
+            throw new IllegalArgumentException("User ID cannot be null for creating a reply.");
         }
 
-        Reply reply = replyMapper.toEntity(replyRequestDto);
-        replyRepository.save(reply);
-        return replyMapper.toResponseDto(reply);
+        if (requestDto.getPostId() != null) {
+            Post post = postRepository.findById(requestDto.getPostId())
+                    .orElseThrow(() -> new RuntimeException("Post not found"));
+            reply.setPost(post);
+
+            Reply savedReply = replyRepository.save(reply);
+
+            post.getReplies().add(savedReply);
+            postRepository.save(post);
+
+            log.info("Reply created successfully for post: {}", post.getId());
+
+            return replyMapper.toDto(savedReply);
+        } else {
+            throw new IllegalArgumentException("Post ID cannot be null for creating a reply.");
+        }
     }
+
 
 
     @Override
     public ReplyResponseDto getById(Long id) {
         Reply reply = replyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reply not found with id: " + id));
-        return replyMapper.toResponseDto(reply);
+        return replyMapper.toDto(reply);
     }
 
     @Override
@@ -53,7 +75,7 @@ public class ReplyServiceImpl implements ReplyService {
         replyMapper.updateFromDto(replyRequestDto, reply);
         replyRepository.save(reply);
         log.info("Reply updated successfully: {}", reply);
-        return replyMapper.toResponseDto(reply);
+        return replyMapper.toDto(reply);
     }
 
     @Override
@@ -69,7 +91,7 @@ public class ReplyServiceImpl implements ReplyService {
     public List<ReplyResponseDto> getByPost(Long postId) {
         List<Reply> replies = replyRepository.findByPostId(postId);
         return replies.stream()
-                .map(replyMapper::toResponseDto)
+                .map(replyMapper::toDto)
                 .collect(Collectors.toList());
     }
 }

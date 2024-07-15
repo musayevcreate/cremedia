@@ -2,6 +2,7 @@ package com.cremedia.cremedia.controller;
 
 import com.cremedia.cremedia.mapper.LikeMapper;
 import com.cremedia.cremedia.models.dto.request.LikeRequestDto;
+import com.cremedia.cremedia.models.dto.response.LikeResponseDto;
 import com.cremedia.cremedia.service.LikeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,4 +38,12 @@ public class LikeController {
         likeService.unlikePost(likeId);
         log.info("Post unliked with ID: {}", likeId);
     }
+
+    @Operation(summary = "get all post likes by users")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/posts/{postId}/likes")
+    public List<LikeResponseDto> getLikesForPost(@PathVariable Long postId) {
+        return likeService.getLikesForPost(postId);
+    }
+
 }

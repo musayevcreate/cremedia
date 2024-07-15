@@ -21,7 +21,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final UserMapper userMapper;
-
     public void register(UserRegisterDTO userRegisterDTO) {
         var user = UserRegisterDTO.builder()
                 .username(userRegisterDTO.getUsername())
