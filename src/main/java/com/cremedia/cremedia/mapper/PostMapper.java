@@ -8,6 +8,8 @@ import com.cremedia.cremedia.models.entity.Post;
 import com.cremedia.cremedia.models.entity.Reply;
 import com.cremedia.cremedia.service.HashtagService;
 import com.cremedia.cremedia.service.UserService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +19,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@RequiredArgsConstructor
+@AllArgsConstructor
 public abstract class PostMapper {
 
-    @Autowired
     protected UserService userService;
 
-    @Autowired
     protected HashtagService hashtagService;
 
     public static PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);

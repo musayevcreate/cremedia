@@ -33,7 +33,7 @@ public class ReplyController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ReplyResponseDto getById(@PathVariable Long id) {
-        return getOrThrow(id);
+        return replyService.getById(id);
     }
 
     @Operation(summary = "Update a Reply by ID")
@@ -49,7 +49,6 @@ public class ReplyController {
     public void delete(@PathVariable Long id) {
         getOrThrow(id);
         replyService.delete(id);
-        log.info("Reply deleted with ID: {}", id);
     }
 
     @Operation(summary = "Get Replies by Post ID")
@@ -57,7 +56,6 @@ public class ReplyController {
     @ResponseStatus(HttpStatus.OK)
     public List<ReplyResponseDto> getByPost(@PathVariable Long postId) {
         List<ReplyResponseDto> replies = replyService.getByPost(postId);
-        log.info("Replies found for post with ID {}: {}", postId, replies);
         return replies;
     }
 

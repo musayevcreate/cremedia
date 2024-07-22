@@ -49,8 +49,6 @@ public class Post {
     )
     private Set<Hashtag> hashtags;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
-    private Set<Emotion> emotions = new HashSet<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();

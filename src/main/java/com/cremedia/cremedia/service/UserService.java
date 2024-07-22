@@ -10,8 +10,6 @@ import java.util.List;
 
 public interface UserService {
 
-    UserResponseDto create(UserRequestDto userRequestDto);
-
     UserResponseDto getById(Long id);
 
     List<UserResponseDto> getAll();

@@ -4,9 +4,9 @@ import com.cremedia.cremedia.models.dto.request.PostRequestDto;
 import com.cremedia.cremedia.models.dto.response.PostResponseDto;
 import com.cremedia.cremedia.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -22,51 +22,42 @@ public class PostController {
     @Operation(summary = "Create a new Post")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<PostResponseDto> create(@Valid @RequestBody PostRequestDto postRequestDto) {
-        PostResponseDto response = postService.create(postRequestDto);
-        return ResponseEntity.ok(response);
+    public PostResponseDto create(@Valid @RequestBody PostRequestDto postRequestDto, HttpServletRequest request) {
+        return postService.create(postRequestDto, request);
     }
 
     @Operation(summary = "Get a Post by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDto> getById(@PathVariable Long id) {
-        PostResponseDto response = postService.getById(id);
-        if (response != null) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @ResponseStatus(HttpStatus.OK)
+    public PostResponseDto getById(@PathVariable Long id) {
+        return postService.getById(id);
     }
 
     @Operation(summary = "Get all Posts")
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAll() {
-        List<PostResponseDto> response = postService.getAll();
-        return ResponseEntity.ok(response);
+    @ResponseStatus(HttpStatus.OK)
+    public List<PostResponseDto> getAll() {
+        return postService.getAll();
     }
 
     @Operation(summary = "Get all Posts by User ID")
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PostResponseDto>> getByUserId(@PathVariable Long userId) {
-        List<PostResponseDto> response = postService.getByUserId(userId);
-        return ResponseEntity.ok(response);
+    @ResponseStatus(HttpStatus.OK)
+    public List<PostResponseDto> getByUserId(@PathVariable Long userId) {
+        return postService.getByUserId(userId);
     }
 
     @Operation(summary = "Update a Post by ID")
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponseDto> update(@PathVariable Long id, @Valid @RequestBody PostRequestDto postRequestDto) {
-        PostResponseDto response = postService.update(id, postRequestDto);
-        if (response != null) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @ResponseStatus(HttpStatus.OK)
+    public PostResponseDto update(@PathVariable Long id, @Valid @RequestBody PostRequestDto postRequestDto) {
+        return postService.update(id, postRequestDto);
     }
 
     @Operation(summary = "Delete a Post by ID")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        postService.delete(id);
-        return ResponseEntity.noContent().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+      postService.delete(id);
     }
 }

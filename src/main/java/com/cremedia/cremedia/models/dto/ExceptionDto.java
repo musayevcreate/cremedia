@@ -1,14 +1,13 @@
-package com.cremedia.cremedia.models.auth;
+package com.cremedia.cremedia.models.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationDTO {
-    private String token;
+public class ExceptionDto {
+    private Integer code;
+    private String message;
 }

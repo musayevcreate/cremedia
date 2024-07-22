@@ -1,6 +1,7 @@
 package com.cremedia.cremedia.models.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -74,21 +75,18 @@ public class User implements UserDetails {
     private LocalDateTime lastLogin;
 
 
-    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
+    @Column(name = "followers_count")
+    private Long followersCount;
+
+    @Column(name = "followings_count")
+    private Long followingsCount;
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Follower> followers = new HashSet<>();
 
-    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
-    private Set<Follower> following = new HashSet<>();
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Follower> followings = new HashSet<>();
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
 
     @ManyToMany
     @JoinTable(name = "user_roles",
@@ -96,7 +94,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
@@ -132,11 +129,6 @@ public class User implements UserDetails {
         this.isVerified = false;
         this.lastLogin = LocalDateTime.now();
     }
-
-
-//    private Long followers;
-//    private Long followings;
-
 
 }
 

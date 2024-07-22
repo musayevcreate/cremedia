@@ -37,12 +37,7 @@ public class UserTagController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserTagResponseDto getById(@PathVariable Long id) {
-        UserTagResponseDto response = userTagService.getById(id);
-        if (response != null) {
-            return response;
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "UserTag not found");
-        }
+        return userTagService.getById(id);
     }
 
     @Operation(summary = "Get all UserTags")

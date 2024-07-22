@@ -1,25 +1,17 @@
 package com.cremedia.cremedia;
 
 import com.cremedia.cremedia.repository.UserRepository;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.MimeMessageHelper;
-
-import javax.naming.Context;
-import java.io.File;
 
 @SpringBootApplication
 @RequiredArgsConstructor
 @Slf4j
 public class CremediaApplication implements CommandLineRunner{
 
-	private final UserRepository userRepository;
 
     public static void main(String[] args) {
 		SpringApplication.run(CremediaApplication.class, args);

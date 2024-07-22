@@ -19,6 +19,8 @@ public class UserResponseDto {
     private String avatar;
     private String bio;
     private String tag;
+    private Long followersCount;
+    private Long followingsCount;
     private LocalDate dateOfBirth;
     private String gender;
     private String country;

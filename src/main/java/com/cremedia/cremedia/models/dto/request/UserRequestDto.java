@@ -35,7 +35,8 @@ public class UserRequestDto {
     private String avatar;
     private String bio;
     private String tag;
-
+    private Long followersCount;
+    private Long followingsCount;
     @NotNull
     private LocalDate dateOfBirth;
 
