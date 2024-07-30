@@ -53,17 +53,12 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
 
+    @Column(name = "replies_count")
+    private Long repliesCount = 0L;
+
     @ManyToOne
     @JoinColumn(name = "reply_to")
     private Post replyTo;
-
-//    @ManyToOne
-//    @JoinColumn(name = "status", nullable = false)
-//    private Status status;
-//
-//    public Post() {
-//        this.status = new Status();
-//    }
 
     private LocalDateTime createdAt;
 

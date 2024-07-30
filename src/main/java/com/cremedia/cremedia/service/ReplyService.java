@@ -5,6 +5,7 @@ import com.cremedia.cremedia.models.dto.response.ReplyResponseDto;
 import com.cremedia.cremedia.models.entity.Post;
 import com.cremedia.cremedia.models.entity.Reply;
 import com.cremedia.cremedia.models.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface ReplyService {
     void delete(Long id);
     List<ReplyResponseDto> getByPost(Long postId);
 
-    ReplyResponseDto create(ReplyRequestDto replyRequestDto);
+    ReplyResponseDto create(ReplyRequestDto replyRequestDto, HttpServletRequest request);
 }

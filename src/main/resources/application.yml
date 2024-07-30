@@ -21,11 +21,13 @@ spring:
     port: 587
     username: musayevcreate@gmail.com
     password: jrje qpay ympq eisn
+
     properties:
       mail:
         smtp:
           auth: true
           starttls:
+            required: true
             enable: true
 
 logging:

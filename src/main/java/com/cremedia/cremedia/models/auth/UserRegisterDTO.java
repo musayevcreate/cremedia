@@ -37,19 +37,11 @@ public class UserRegisterDTO {
 
     private Set<RoleDTO> roles;
 
-//    private String avatar;
-//    private String bio;
-//    private String tag;
-//
-////    @NotNull
-////    private LocalDate dateOfBirth;
-//
-//    private String gender;
-//    private String country;
-//    private Boolean visibility;
     private Boolean isEnabled;
-//    private Boolean isActive;
-//    private Boolean isPro;
-//    private Boolean isVerified;
-//    private LocalDate lastLogin;
+
+    @Schema(hidden = true)
+    private Long followersCount;
+    @Schema(hidden = true)
+    private Long followingsCount;
+
 }

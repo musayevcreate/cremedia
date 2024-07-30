@@ -1,15 +1,15 @@
-package com.cremedia.cremedia.service.impl;
+package com.cremedia.cremedia.service.Impl;
 
+import com.cremedia.cremedia.exception.EntityNotFoundException;
 import com.cremedia.cremedia.mapper.LikeMapper;
 import com.cremedia.cremedia.models.dto.request.LikeRequestDto;
 import com.cremedia.cremedia.models.dto.response.LikeResponseDto;
 import com.cremedia.cremedia.models.entity.Like;
-import com.cremedia.cremedia.models.entity.Post;
-import com.cremedia.cremedia.models.entity.User;
 import com.cremedia.cremedia.repository.LikeRepository;
 import com.cremedia.cremedia.repository.PostRepository;
-import com.cremedia.cremedia.repository.UserRepository;
 import com.cremedia.cremedia.service.LikeService;
+import com.cremedia.cremedia.utility.ExtractorHelper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,20 +24,18 @@ import java.util.stream.Collectors;
 public class LikeServiceImpl implements LikeService {
 
     private final LikeRepository likeRepository;
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final LikeMapper likeMapper;
+    private final ExtractorHelper extractorHelper;
 
     @Override
-    public void likePost(LikeRequestDto likeRequestDto) {
-        User user = userRepository.findById(likeRequestDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + likeRequestDto.getUserId()));
+    public void likePost(LikeRequestDto likeRequestDto, HttpServletRequest request) {
+        log.info("create method is started.");
+        likeRequestDto.setUserId(Long.valueOf(extractorHelper.extractUsername(request)));
+        var post = postRepository.findById(likeRequestDto.getPostId())
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + likeRequestDto.getPostId()));
 
-        Post post = postRepository.findById(likeRequestDto.getPostId())
-                .orElseThrow(() -> new RuntimeException("Post not found with id: " + likeRequestDto.getPostId()));
-
-        Like like = likeMapper.toEntity(likeRequestDto);
-        like.setUser(user);
+        var like = likeMapper.toEntity(likeRequestDto);
         like.setPost(post);
         like.setLikeDate(LocalDateTime.now());
 
@@ -46,7 +44,7 @@ public class LikeServiceImpl implements LikeService {
         post.setLikes(post.getLikes() + 1);
         postRepository.save(post);
 
-        log.info("Post liked successfully by user: {}, post: {}", user.getId(), post.getId());
+        log.info("Post liked successfully by user: {}, post: {}", likeRequestDto.getUserId(), post.getId());
     }
 
     @Override
@@ -55,15 +53,6 @@ public class LikeServiceImpl implements LikeService {
         likeRepository.deleteById(postId);
     }
 
-    @Override
-    public void likeReply(Long replyId, Long userId) {
-        // Implement the like reply logic if needed
-    }
-
-    @Override
-    public void unlikeReply(Long replyId, Long userId) {
-        // Implement the unlike reply logic if needed
-    }
 
     @Override
     public List<LikeResponseDto> getLikesForPost(Long postId) {

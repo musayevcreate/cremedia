@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -19,15 +21,27 @@ public class WebSecurityConfig  {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
+    public PasswordEncoder bcryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth
+                                .requestMatchers("/api/users/password-recovery").permitAll()
+                                .requestMatchers("/api/users/password-reset").permitAll()
                                 .requestMatchers(permitSwagger).permitAll()
+
                                 .requestMatchers("/api/auth/login").permitAll()
                                .requestMatchers("/api/auth/register").permitAll()
-                               .requestMatchers("/api/posts/**").hasRole("USER")
+                               .requestMatchers("/api/posts/**").hasAnyRole("USER")
+                               .requestMatchers("/api/followers/**").hasAnyRole("USER")
+                               .requestMatchers("/api/likes/**").hasAnyRole("USER")
+                               .requestMatchers("/api/replies/**").hasAnyRole("USER")
+                                 .requestMatchers("/api/users/**").hasAnyRole("USER")
 
                                 .anyRequest().authenticated());
         http.authenticationProvider(authenticationProvider);

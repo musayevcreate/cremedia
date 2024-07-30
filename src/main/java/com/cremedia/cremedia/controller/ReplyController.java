@@ -5,6 +5,7 @@ import com.cremedia.cremedia.models.dto.response.ReplyResponseDto;
 import com.cremedia.cremedia.models.entity.Post;
 import com.cremedia.cremedia.service.ReplyService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,8 @@ public class ReplyController {
     @Operation(summary = "Create a new Reply")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ReplyResponseDto create(@Valid @RequestBody ReplyRequestDto replyRequestDto) {
-        return replyService.create(replyRequestDto);
+    public ReplyResponseDto create(@Valid @RequestBody ReplyRequestDto replyRequestDto, HttpServletRequest request) {
+        return replyService.create(replyRequestDto,request);
     }
 
     @Operation(summary = "Get a Reply by ID")

@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Data
 public class UserResponseDto {
 
-    @Schema(hidden = true)
-    private Long id;
     private String username;
     private String name;
     private String surname;
@@ -26,7 +24,6 @@ public class UserResponseDto {
     private String country;
     private Boolean visibility;
     private Boolean isActive;
-    private Boolean isPro;
     private Boolean isVerified;
     private LocalDateTime lastLogin;
 }

@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/api/hashtags")
 @Slf4j
-public class HashtagController {
+public class  HashtagController {
 
     private final HashtagService hashtagService;
 

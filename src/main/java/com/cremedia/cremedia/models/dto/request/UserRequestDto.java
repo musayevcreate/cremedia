@@ -44,7 +44,6 @@ public class UserRequestDto {
     private String country;
     private Boolean visibility;
     private Boolean isActive;
-    private Boolean isPro;
     private Boolean isVerified;
     private LocalDate lastLogin;
 }

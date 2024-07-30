@@ -5,19 +5,24 @@ import com.cremedia.cremedia.models.dto.response.PostResponseDto;
 import com.cremedia.cremedia.models.entity.Hashtag;
 import com.cremedia.cremedia.models.entity.Post;
 import com.cremedia.cremedia.mapper.PostMapper;
+import com.cremedia.cremedia.models.entity.User;
 import com.cremedia.cremedia.repository.PostRepository;
 import com.cremedia.cremedia.service.HashtagService;
 import com.cremedia.cremedia.service.PostService;
 import com.cremedia.cremedia.utility.ExtractorHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
@@ -28,31 +33,35 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDto create(PostRequestDto requestDto, HttpServletRequest request) {
+        log.info("create method is started.");
         requestDto.setUserId(Long.valueOf(extractorHelper.extractUsername(request)));
-
-        Post post = postMapper.toEntity(requestDto);
+        var post = postMapper.toEntity(requestDto);
 
         Set<Hashtag> hashtags = hashtagService.extractHashtags(requestDto.getContent());
         post.setHashtags(hashtags);
-
-        Post savedPost = postRepository.save(post);
-
+        post.setCreatedAt(LocalDateTime.now());
+        var savedPost = postRepository.save(post);
+        log.info("create method is finished.");
         return postMapper.toDto(savedPost);
     }
 
 
     @Override
-    public PostResponseDto getById(Long id) {
-        Post post = postRepository.findById(id).orElse(null);
+    public PostResponseDto getById(Long id ) {
+        log.info("getById method is started.");
+        var post = postRepository.findById(id).orElse(null);
         if (post == null) {
             return null;
         }
+        log.info("getById method is finished.");
         return postMapper.toDto(post);
     }
 
     @Override
     public List<PostResponseDto> getAll() {
+        log.info("getAll method is started.");
         List<Post> posts = postRepository.findAll();
+        log.info("All posts retrieved: {}", posts);
         return posts.stream()
                 .map(postMapper::toDto)
                 .collect(Collectors.toList());
@@ -61,7 +70,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostResponseDto> getByUserId(Long userId) {
+        log.info("getByUserId method is started.");
         List<Post> posts = postRepository.findByUserId(userId);
+        log.info("Posts retrieved by userId: {}", posts);
         return posts.stream()
                 .map(postMapper::toDto)
                 .collect(Collectors.toList());
@@ -69,18 +80,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDto update(Long id, PostRequestDto requestDto) {
-        Post existingPost = postRepository.findById(id).orElse(null);
+        log.info("update method is started.");
+        var existingPost = postRepository.findById(id).orElse(null);
         if (existingPost == null) {
             return null;
         }
-        Post updatedPost = postMapper.toEntity(requestDto);
+        var updatedPost = postMapper.toEntity(requestDto);
         updatedPost.setId(existingPost.getId());
-        Post savedPost = postRepository.save(updatedPost);
+        var savedPost = postRepository.save(updatedPost);
+        log.info("update method is finished.");
         return postMapper.toDto(savedPost);
     }
 
     @Override
     public void delete(Long id) {
+        log.info("delete method is started.");
         postRepository.deleteById(id);
+        log.info("Post deleted with id: {}", id);
     }
 }

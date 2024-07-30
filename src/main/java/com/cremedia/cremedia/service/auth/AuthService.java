@@ -30,6 +30,8 @@ public class AuthService {
                 .surname(userRegisterDTO.getSurname())
                 .number(userRegisterDTO.getNumber())
                 .roles(userRegisterDTO.getRoles())
+                .followingsCount(0L)
+                .followersCount(0L)
                 .isEnabled(true)
                 .build();
 

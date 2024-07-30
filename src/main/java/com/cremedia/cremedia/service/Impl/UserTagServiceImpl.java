@@ -8,6 +8,7 @@ import com.cremedia.cremedia.models.entity.UserTag;
 import com.cremedia.cremedia.repository.UserRepository;
 import com.cremedia.cremedia.repository.UserTagRepository;
 import com.cremedia.cremedia.service.UserTagService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserTagServiceImpl implements UserTagService {
 
 
@@ -24,19 +26,14 @@ public class UserTagServiceImpl implements UserTagService {
     private final UserRepository userRepository;
     private final UserTagMapper userTagMapper;
 
-    public UserTagServiceImpl(UserTagRepository userTagRepository, UserRepository userRepository, UserTagMapper userTagMapper) {
-        this.userTagRepository = userTagRepository;
-        this.userRepository = userRepository;
-        this.userTagMapper = userTagMapper;
-    }
 
     @Override
     @Transactional
     public UserTagResponseDto create(UserTagRequestDto dto) {
         log.info("Usertagcreate method is started.");
-        UserTag userTag = userTagMapper.toEntity(dto);
+        var userTag = userTagMapper.toEntity(dto);
 
-        User user = userRepository.findById(dto.getUserId())
+        var user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("USER_NOT_FOUND"));
         user.setTagName(dto.getTagName());
         userRepository.save(user);
@@ -51,10 +48,10 @@ public class UserTagServiceImpl implements UserTagService {
     @Transactional
     public UserTagResponseDto update(Long id, UserTagRequestDto dto) {
         log.info("Usertagupdate method is started.");
-        UserTag userTag = userTagRepository.findById(id)
+        var userTag = userTagRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("USERTAG_NOT_FOUND"));
 
-        User user = userRepository.findById(dto.getUserId())
+        var user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("USER_NOT_FOUND"));
         user.setTagName(dto.getTagName());
         userRepository.save(user);

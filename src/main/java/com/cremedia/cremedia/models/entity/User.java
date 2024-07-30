@@ -1,7 +1,7 @@
 package com.cremedia.cremedia.models.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.cremedia.cremedia.enums.SubscriptionPlanType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -51,17 +51,6 @@ public class User implements UserDetails {
     private String gender;
     private String country;
 
-//    @ManyToOne
-//    @JoinColumn(name = "status", nullable = false)
-//    private Status status;
-//
-//    public User() {
-//        this.status = new Status();
-//    }
-
-    @Column(nullable = false)
-    private boolean isPro;
-
     @Column(nullable = false)
     private boolean isVerified;
 
@@ -88,17 +77,26 @@ public class User implements UserDetails {
     private Set<Follower> followings = new HashSet<>();
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                 .collect(Collectors.toList());
     }
+
+    @Enumerated(EnumType.STRING)
+    private SubscriptionPlanType subscriptionPlan;
+
+    private boolean hasBlueTick;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PasswordResetToken> passwordResetTokens;
 
     @Override
     public boolean isAccountNonExpired() {
@@ -125,7 +123,6 @@ public class User implements UserDetails {
         this.avatar = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
         this.bio = "Hello, I'm new here!";
         this.isEnabled = true;
-        this.isPro = false;
         this.isVerified = false;
         this.lastLogin = LocalDateTime.now();
     }

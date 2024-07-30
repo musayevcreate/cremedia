@@ -5,21 +5,19 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Table(name="roles")
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Builder
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    public Role() {
-        this.id = 2;
-    }
 
     @Enumerated(EnumType.STRING)
     private RoleEnum name;

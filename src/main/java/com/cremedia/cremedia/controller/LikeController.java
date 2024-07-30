@@ -5,6 +5,7 @@ import com.cremedia.cremedia.models.dto.request.LikeRequestDto;
 import com.cremedia.cremedia.models.dto.response.LikeResponseDto;
 import com.cremedia.cremedia.service.LikeService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,13 +22,12 @@ import java.util.List;
 public class LikeController {
 
     private final LikeService likeService;
-    private final LikeMapper likeMapper;
 
     @Operation(summary = "Like a post")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void like(@Valid @RequestBody LikeRequestDto likeRequestDto) {
-        likeService.likePost(likeRequestDto);
+    public void like(@Valid @RequestBody LikeRequestDto likeRequestDto, HttpServletRequest request) {
+        likeService.likePost(likeRequestDto, request);
         log.info("Post liked: {}", likeRequestDto);
     }
 
