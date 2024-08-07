@@ -3,28 +3,23 @@ import com.cremedia.cremedia.models.dto.request.FollowerRequestDto;
 import com.cremedia.cremedia.models.dto.response.FollowerResponseDto;
 import com.cremedia.cremedia.service.FollowerService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/followers")
+@RequiredArgsConstructor
+@RequestMapping("/api/follow")
 public class FollowerController {
 
     private final FollowerService followerService;
-
-    @Autowired
-    public FollowerController(FollowerService followerService) {
-        this.followerService = followerService;
-    }
 
     @PostMapping
     public FollowerResponseDto follow(@RequestBody FollowerRequestDto dto, HttpServletRequest request) {
         return followerService.follow(dto,request);
     }
-
 
     @PostMapping("/unfollow")
     public void unfollow(@RequestBody FollowerRequestDto requestDto, HttpServletRequest request) {

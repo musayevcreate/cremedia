@@ -25,7 +25,7 @@ public class AuthController {
         authService.register(userRegisterDTO);
     }
 
-    @DeleteMapping("/delete/{username}")
+    @DeleteMapping("/{username}")
     public void delete(@PathVariable String username){
         authService.deleteUser(username);
     }

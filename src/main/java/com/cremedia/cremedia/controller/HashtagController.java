@@ -26,13 +26,13 @@ public class  HashtagController {
     @ResponseStatus(HttpStatus.CREATED)
     public HashtagResponseDto create(@RequestBody HashtagRequestDto request) {
         Hashtag hashtag = hashtagService.create(request.getText());
-        return HashtagMapper.toDto(hashtag);
+        return HashtagMapper.toDto(hashtag); // edit
     }
 
     @Operation(summary = "Get Hashtag by text")
     @GetMapping("/{text}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Hashtag> getByText(@PathVariable String text) {
+    public String getByText(@PathVariable String text) {
      return hashtagService.getByText(text);
 
     }

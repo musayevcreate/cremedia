@@ -28,7 +28,6 @@ public class LikeController {
     @ResponseStatus(HttpStatus.CREATED)
     public void like(@Valid @RequestBody LikeRequestDto likeRequestDto, HttpServletRequest request) {
         likeService.likePost(likeRequestDto, request);
-        log.info("Post liked: {}", likeRequestDto);
     }
 
     @Operation(summary = "Unlike a post")
@@ -36,7 +35,6 @@ public class LikeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unlike(@PathVariable Long likeId) {
         likeService.unlikePost(likeId);
-        log.info("Post unliked with ID: {}", likeId);
     }
 
     @Operation(summary = "get all post likes by users")

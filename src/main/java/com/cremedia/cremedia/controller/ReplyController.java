@@ -41,14 +41,13 @@ public class ReplyController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ReplyResponseDto update(@PathVariable Long id, @Valid @RequestBody ReplyRequestDto replyRequestDto) {
-        return getOrThrow(id, replyService.update(id, replyRequestDto));
+        return replyService.update(id, replyRequestDto);
     }
 
     @Operation(summary = "Delete a Reply by ID")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        getOrThrow(id);
         replyService.delete(id);
     }
 
@@ -60,22 +59,5 @@ public class ReplyController {
         return replies;
     }
 
-    private ReplyResponseDto getOrThrow(Long id) {
-        ReplyResponseDto reply = replyService.getById(id);
-        if (reply == null) {
-            log.info("Reply with ID {} not found", id);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reply not found");
-        }
-        log.info("Reply found: {}", reply);
-        return reply;
-    }
 
-    private ReplyResponseDto getOrThrow(Long id, ReplyResponseDto reply) {
-        if (reply == null) {
-            log.info("Reply with ID {} not found", id);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reply not found");
-        }
-        log.info("Reply updated: {}", reply);
-        return reply;
-    }
 }

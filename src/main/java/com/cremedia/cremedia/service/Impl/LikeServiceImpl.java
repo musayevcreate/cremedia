@@ -7,6 +7,7 @@ import com.cremedia.cremedia.models.dto.response.LikeResponseDto;
 import com.cremedia.cremedia.models.entity.Like;
 import com.cremedia.cremedia.repository.LikeRepository;
 import com.cremedia.cremedia.repository.PostRepository;
+import com.cremedia.cremedia.repository.UserRepository;
 import com.cremedia.cremedia.service.LikeService;
 import com.cremedia.cremedia.utility.ExtractorHelper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,11 +28,14 @@ public class LikeServiceImpl implements LikeService {
     private final PostRepository postRepository;
     private final LikeMapper likeMapper;
     private final ExtractorHelper extractorHelper;
+    private final UserRepository userRepository;
 
     @Override
     public void likePost(LikeRequestDto likeRequestDto, HttpServletRequest request) {
         log.info("create method is started.");
-        likeRequestDto.setUserId(Long.valueOf(extractorHelper.extractUsername(request)));
+        var user = userRepository.findUserByUsername(extractorHelper.extractUsername(request)).orElseThrow();
+        likeRequestDto.setUserId(user.getId());
+
         var post = postRepository.findById(likeRequestDto.getPostId())
                 .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + likeRequestDto.getPostId()));
 

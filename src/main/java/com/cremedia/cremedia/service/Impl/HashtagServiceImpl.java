@@ -1,27 +1,31 @@
 package com.cremedia.cremedia.service.Impl;
 
+import com.cremedia.cremedia.exception.EntityNotFoundException;
 import com.cremedia.cremedia.models.entity.Hashtag;
 import com.cremedia.cremedia.repository.HashtagRepository;
 import com.cremedia.cremedia.service.HashtagService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class HashtagServiceImpl implements HashtagService {
 
     private final HashtagRepository hashtagRepository;
 
     @Override
     public Hashtag create(String text) {
+        log.info("Creating a new hashtag: {}", text);
         Hashtag hashtag = new Hashtag();
         hashtag.setText(text);
+        log.info("Hashtag created successfully: {}", text);
         return hashtagRepository.save(hashtag);
     }
 
@@ -45,8 +49,8 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     @Override
-    public Optional<Hashtag> getByText(String text) {
-        return hashtagRepository.findByText(text);
+    public String getByText(String text) {  //FIXME HASHTAGDTO +!
+        return String.valueOf(hashtagRepository.findByText(text));
     }
 
     @Override

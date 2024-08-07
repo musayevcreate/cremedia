@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder bcryptPasswordEncoder;
     private final ExtractorHelper extractorHelper;
     private final PasswordResetTokenRepository tokenRepository;
-    private final TokenServiceImpl tokenService;
     private final EmailServiceImpl emailService;
 
 
@@ -71,7 +70,7 @@ public class UserServiceImpl implements UserService {
         String username = extractorHelper.extractUsername(request);
 
         User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         userMapper.updateFromDto(userRequestDto, user);
         userRepository.save(user);
         log.info("User updated: {}", user);
@@ -85,7 +84,7 @@ public class UserServiceImpl implements UserService {
         String username = extractorHelper.extractUsername(request);
 
         User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (!bcryptPasswordEncoder.matches(passwordUpdateRequestDto.getOldPassword(), user.getPassword())) {
             throw new RuntimeException("Old password is incorrect");
@@ -100,7 +99,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void requestPasswordRecovery(PasswordRecoveryRequestDto requestDto) {
         User user = userRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         PasswordResetToken token = new PasswordResetToken();
         token.setToken(UUID.randomUUID().toString());
@@ -116,7 +115,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void resetPasswordToken(TokenBasedPasswordResetRequestDto requestDto, String token) {
         PasswordResetToken passwordResetToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("Token not found or expired"));
+                .orElseThrow(() -> new EntityNotFoundException("Token not found or expired"));
 
         if (LocalDateTime.now().isAfter(passwordResetToken.getExpirationDate())) {
             throw new RuntimeException("Token has expired");

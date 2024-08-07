@@ -33,6 +33,7 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public ReplyResponseDto create(ReplyRequestDto requestDto, HttpServletRequest request) {
+        log.info("reply create method is started.");
         String extractedUsername = extractorHelper.extractUsername(request);
         var user = userRepository.findUserByUsername(extractedUsername)
                 .orElseThrow(() -> new EntityNotFoundException("USER_NOT_FOUND"));
@@ -54,7 +55,7 @@ public class ReplyServiceImpl implements ReplyService {
             post.setRepliesCount(post.getRepliesCount() + 1);
             return replyMapper.toDto(savedReply);
         } else {
-            throw new IllegalArgumentException("Post ID cannot be null for creating a reply.");
+            throw new EntityNotFoundException("Post ID cannot be null for creating a reply.");
         }
     }
 
@@ -62,14 +63,17 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public ReplyResponseDto getById(Long id) {
+        log.info("getById method is started.");
         var reply = replyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reply not found with id: " + id));
+        log.info("Reply retrieved: {}", reply);
         return replyMapper.toDto(reply);
     }
 
     @Override
     @Transactional
     public ReplyResponseDto update(Long id, ReplyRequestDto replyRequestDto) {
+        log.info("update method is started.");
         var reply = replyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reply not found with id: " + id));
         replyMapper.updateFromDto(replyRequestDto, reply);
@@ -81,6 +85,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     @Transactional
     public void delete(Long id) {
+        log.info("delete method is started.");
         var reply = replyRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reply not found with id: " + id));
         replyRepository.delete(reply);

@@ -1,5 +1,7 @@
 package com.cremedia.cremedia.service.Impl;
 
+import com.cremedia.cremedia.exception.EntityNotFoundException;
+import com.cremedia.cremedia.mapper.UserMapper;
 import com.cremedia.cremedia.models.dto.request.PostRequestDto;
 import com.cremedia.cremedia.models.dto.response.PostResponseDto;
 import com.cremedia.cremedia.models.entity.Hashtag;
@@ -7,6 +9,7 @@ import com.cremedia.cremedia.models.entity.Post;
 import com.cremedia.cremedia.mapper.PostMapper;
 import com.cremedia.cremedia.models.entity.User;
 import com.cremedia.cremedia.repository.PostRepository;
+import com.cremedia.cremedia.repository.UserRepository;
 import com.cremedia.cremedia.service.HashtagService;
 import com.cremedia.cremedia.service.PostService;
 import com.cremedia.cremedia.utility.ExtractorHelper;
@@ -29,30 +32,30 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
     private final HashtagService hashtagService;
     private final ExtractorHelper extractorHelper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
 
     @Override
     public PostResponseDto create(PostRequestDto requestDto, HttpServletRequest request) {
         log.info("create method is started.");
-        requestDto.setUserId(Long.valueOf(extractorHelper.extractUsername(request)));
+        var user = userRepository.findUserByUsername(extractorHelper.extractUsername(request)).orElseThrow();
+        requestDto.setUserId(user.getId());
         var post = postMapper.toEntity(requestDto);
 
         Set<Hashtag> hashtags = hashtagService.extractHashtags(requestDto.getContent());
         post.setHashtags(hashtags);
         post.setCreatedAt(LocalDateTime.now());
-        var savedPost = postRepository.save(post);
+        postRepository.save(post);
         log.info("create method is finished.");
-        return postMapper.toDto(savedPost);
+        return postMapper.toDto(post);
     }
 
 
     @Override
     public PostResponseDto getById(Long id ) {
         log.info("getById method is started.");
-        var post = postRepository.findById(id).orElse(null);
-        if (post == null) {
-            return null;
-        }
+        var post = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + id));
         log.info("getById method is finished.");
         return postMapper.toDto(post);
     }
@@ -81,10 +84,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto update(Long id, PostRequestDto requestDto) {
         log.info("update method is started.");
-        var existingPost = postRepository.findById(id).orElse(null);
-        if (existingPost == null) {
-            return null;
-        }
+        var existingPost = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + id));
         var updatedPost = postMapper.toEntity(requestDto);
         updatedPost.setId(existingPost.getId());
         var savedPost = postRepository.save(updatedPost);

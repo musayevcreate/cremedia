@@ -9,6 +9,7 @@ import org.mapstruct.factory.Mappers;
 public interface FollowerMapper {
     FollowerMapper INSTANCE = Mappers.getMapper(FollowerMapper.class);
 
+
     Follower toEntity(FollowerRequestDto dto);
     FollowerResponseDto toDto(Follower entity);
 }

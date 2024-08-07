@@ -29,28 +29,24 @@ public class SubscriptionPlanController {
     @Operation(summary = "Get all Subscription Plans")
     @GetMapping
     public List<SubscriptionPlanResponseDto> getAllSubscriptionPlans() {
-        log.info("Received request to get all subscription plans");
         return subscriptionPlanService.getAllSubscriptionPlans();
     }
 
     @Operation(summary = "Get Subscription Plan by ID")
     @GetMapping("/{id}")
     public SubscriptionPlanResponseDto getSubscriptionPlanById(@PathVariable Long id) {
-        log.info("Received request to get subscription plan with id: {}", id);
         return subscriptionPlanService.getSubscriptionPlanById(id);
     }
 
     @Operation(summary = "Update Subscription Plan")
     @PutMapping("/{id}")
     public SubscriptionPlanResponseDto updateSubscriptionPlan(@PathVariable Long id, @RequestBody SubscriptionPlanRequestDto dto) {
-        log.info("Received request to update subscription plan with id: {}", id);
         return subscriptionPlanService.updateSubscriptionPlan(id, dto);
     }
 
     @Operation(summary = "Delete Subscription Plan by ID")
     @DeleteMapping("/{id}")
     public void deleteSubscriptionPlan(@PathVariable Long id) {
-        log.info("Received request to delete subscription plan with id: {}", id);
         subscriptionPlanService.deleteSubscriptionPlan(id);
     }
 }
